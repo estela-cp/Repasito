@@ -11,51 +11,58 @@ class GildedRose {
   }
 
   public void updateQuality() {
-    for (int i = 0; i < items.length; i++) {
-      if (!items[i].name.equals(AGED_BRIE)
-              && !items[i].name.equals(BACKSTAGE_PASSES)) {
-        if (items[i].quality > 0 && !items[i].name.equals(SULFURAS)) {
-            items[i].quality = items[i].quality - 1;
-          }
+      for (Item item : items) {
+          if (!item.name.equals(AGED_BRIE)
+                  && !item.name.equals(BACKSTAGE_PASSES)) {
+              decrementarCalidad(item);
 
-      } else {
-        if (items[i].quality < 50) {
-          items[i].quality++;
-
-          if (items[i].name.equals(BACKSTAGE_PASSES)) {
-            if (items[i].sellIn < 11 && items[i].quality < 50) {
-                items[i].quality = items[i].quality + 1;
+          } else if (item.quality < 50) {
+                  item.quality++;
+                  aumentarCalidadBackstage(item);
               }
 
 
-            if (items[i].sellIn < 6 && items[i].quality < 50) {
-                items[i].quality = items[i].quality + 1;
-              }
+          decrementarSellIn(item);
 
+          if (item.sellIn < 0) {
+            modificarCalidadCaducado(item);
           }
-        }
       }
-
-      if (!items[i].name.equals(SULFURAS)) {
-        items[i].sellIn = items[i].sellIn - 1;
-      }
-
-      if (items[i].sellIn < 0) {
-        if (!items[i].name.equals(AGED_BRIE)) {
-          if (!items[i].name.equals(BACKSTAGE_PASSES)) {
-            if (items[i].quality > 0 && !items[i].name.equals(SULFURAS)) {
-                items[i].quality = items[i].quality - 1;
-              }
-
-          } else {
-            items[i].quality = 0;
-          }
-        } else {
-          if (items[i].quality < 50) {
-            items[i].quality = items[i].quality + 1;
-          }
-        }
-      }
-    }
   }
+      public void modificarCalidadCaducado(Item item){
+        if(item.name.equals(BACKSTAGE_PASSES)){
+          item.quality=0;
+        }else if (!item.name.equals(AGED_BRIE)) {
+          decrementarCalidad(item);
+        } else {
+          if (item.quality < 50) {
+            item.quality++;
+          }
+        }
+      }
+      public void decrementarCalidad(Item item){
+        if (item.quality > 0 && !item.name.equals(SULFURAS)) {
+          item.quality--;
+        }
+      }
+
+      public void decrementarSellIn(Item item){
+        if (!item.name.equals(SULFURAS)) {
+          item.sellIn--;
+        }
+      }
+
+      public void aumentarCalidadBackstage(Item item){
+        if (item.name.equals(BACKSTAGE_PASSES)) {
+          if (item.sellIn < 11) {
+            item.quality++;
+          }
+
+
+          if (item.sellIn < 6) {
+            item.quality++;
+          }
+
+        }
+      }
 }
