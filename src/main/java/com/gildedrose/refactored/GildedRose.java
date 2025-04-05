@@ -10,6 +10,8 @@ class GildedRose {
     this.items = items;
   }
 
+  //MODIFICO ALGO
+
   public void updateQuality() {
       for (Item item : items) {
           if (!item.name.equals(AGED_BRIE)
